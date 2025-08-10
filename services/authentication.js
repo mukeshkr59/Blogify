@@ -1,5 +1,5 @@
 const JWT = require("jsonwebtoken");
-const { Profiler } = require("react");
+// const { Profiler } = require("react");
 
 const secret = "$aktiman@1234";
 

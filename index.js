@@ -3,6 +3,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 
 const userRoute = require("./routes/user");
+const cookieParser = require("cookie-parser");
+const {
+  checkForauthenticationCookies,
+} = require("./middlewares/authentication");
 
 const app = express();
 const PORT = 8000;
@@ -13,12 +17,16 @@ mongoose
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(checkForauthenticationCookies("token"));
 
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
 
 app.get("/", (req, res) => {
-  return res.render("home");
+  res.render("home", {
+    user: req.user,
+  });
 });
 
 app.use("/user", userRoute);
