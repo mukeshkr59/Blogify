@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/signin", (req, res) => {
   return res.render("signin", {
-    user: req.User
+    user: req.user
   });
 });
 
@@ -21,6 +21,7 @@ router.post("/signin", async (req, res) => {
     const token = await User.matchPasswordAndGenerateToken(email, password);
 
     console.log("Token :", token);
+    // return res.cookie("token", token).redirect("/");
     return res.cookie("token", token).redirect("/");
   } catch (error) {
     return res.render("signin", {

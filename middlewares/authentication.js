@@ -10,6 +10,7 @@ function checkForauthenticationCookies(cookieName) {
     try {
       const userPayload = validateToken(tokenCookieValue);
       req.user = userPayload;
+      res.locals.user = userPayload;
     } catch (error) {}
 
     return next();
