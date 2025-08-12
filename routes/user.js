@@ -4,7 +4,9 @@ const User = require("../models/user");
 const router = Router();
 
 router.get("/signin", (req, res) => {
-  return res.render("signin");
+  return res.render("signin", {
+    user: req.User
+  });
 });
 
 router.get("/signup", (req, res) => {

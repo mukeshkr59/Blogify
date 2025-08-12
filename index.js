@@ -1,9 +1,12 @@
 const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
-
-const userRoute = require("./routes/user");
 const cookieParser = require("cookie-parser");
+
+const Blog = require("./models/blog");
+const blogRoute = require("./routes/blog");
+const userRoute = require("./routes/user");
+
 const {
   checkForauthenticationCookies,
 } = require("./middlewares/authentication");
@@ -23,13 +26,17 @@ app.use(checkForauthenticationCookies("token"));
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  const allBlogs = await Blog.find({})
   res.render("home", {
     user: req.user,
+    blogs: allBlogs,
   });
 });
 
 app.use("/user", userRoute);
+app.use("/blog", blogRoute);
+
 
 app.listen(PORT, () =>
   console.log(`Server Started at http://localhost:${PORT}`)
