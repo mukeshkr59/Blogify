@@ -1,7 +1,8 @@
 const { validateToken } = require("../services/authentication");
+const User = require("../models/user");
 
 function checkForauthenticationCookies(cookieName) {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     const tokenCookieValue = req.cookies[cookieName];
     if (!tokenCookieValue) {
       return next();
@@ -9,8 +10,12 @@ function checkForauthenticationCookies(cookieName) {
 
     try {
       const userPayload = validateToken(tokenCookieValue);
-      req.user = userPayload;
-      res.locals.user = userPayload;
+      // Fetch the latest user data from DB
+      const user = await User.findById(userPayload._id);
+      if (user) {
+        req.user = user;
+        res.locals.user = user;
+      }
     } catch (error) {}
 
     return next();

@@ -59,4 +59,44 @@ router.post("/", upload.single("coverImage"), async (req, res) => {
   return res.redirect(`/blog/${blog._id}`);
 });
 
+// Edit blog GET route
+router.get("/edit/:id", async (req, res) => {
+  const blog = await Blog.findById(req.params.id);
+  if (!blog) return res.status(404).send("Blog not found");
+  if (!req.user || String(blog.createdBy) !== String(req.user._id)) {
+    return res.status(403).send("Unauthorized");
+  }
+  return res.render("editBlog", { user: req.user, blog });
+});
+
+// Edit blog POST route
+router.post("/edit/:id", upload.single("coverImage"), async (req, res) => {
+  const blog = await Blog.findById(req.params.id);
+  if (!blog) return res.status(404).send("Blog not found");
+  if (!req.user || String(blog.createdBy) !== String(req.user._id)) {
+    return res.status(403).send("Unauthorized");
+  }
+  blog.title = req.body.title;
+  blog.body = req.body.body;
+  if (req.file) {
+    blog.coverImageURL = `/uploads/${req.file.filename}`;
+  }
+  await blog.save();
+  return res.redirect(`/blog/${blog._id}`);
+});
+
+// Delete blog POST route
+router.post("/delete/:id", async (req, res) => {
+  const blog = await Blog.findById(req.params.id);
+  if (!blog) return res.status(404).send("Blog not found");
+  if (!req.user || String(blog.createdBy) !== String(req.user._id)) {
+    return res.status(403).send("Unauthorized");
+  }
+  // Delete all comments for this blog
+  await Comment.deleteMany({ blogId: blog._id });
+  // Delete the blog
+  await blog.deleteOne();
+  return res.redirect("/");
+});
+
 module.exports = router;

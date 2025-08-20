@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head') %>
+    <title>Profile</title>
+  </head>
+  <body>
+    <%- include('./partials/nav') %>
+    <div class="container mt-4">
+      <h1>Profile</h1>
+      <div class="row">
+        <div class="col-md-4 text-center">
+          <form
+            action="/user/profile-image"
+            method="POST"
+            enctype="multipart/form-data">
+            <img
+              src="<%= user.prifileImageURL %>"
+              alt="Profile Image"
+              class="rounded-circle mb-2"
+              style="width: 150px; height: 150px; object-fit: cover" />
+            <div class="mb-2">
+              <input
+                type="file"
+                name="profileImage"
+                class="form-control"
+                accept="image/*" />
+            </div>
+            <button type="submit" class="btn btn-sm btn-primary">
+              Update Image
+            </button>
+          </form>
+        </div>
+        <div class="col-md-8">
+          <h3><%= user.fullName %></h3>
+          <p><strong>Email:</strong> <%= user.email %></p>
+        </div>
+      </div>
+      <hr />
+      <h2>Blog History</h2>
+      <ul class="list-group mb-4">
+        <% blogs.forEach(blog => { %>
+        <li class="list-group-item">
+          <a href="/blog/<%= blog._id %>"><%= blog.title %></a>
+        </li>
+        <% }) %>
+      </ul>
+      <h2>Comment History</h2>
+      <ul class="list-group">
+        <% comments.forEach(comment => { %>
+        <li class="list-group-item">
+          <strong>On <a href="/blog/<%= comment.blogId %>">Blog</a>:</strong>
+          <%= comment.content %>
+        </li>
+        <% }) %>
+      </ul>
+    </div>
+    <%- include('./partials/script') %>
+  </body>
+</html>
