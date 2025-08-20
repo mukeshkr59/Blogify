@@ -24,13 +24,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(checkForauthenticationCookies("token"));
-app.use(express.static(path.resolve('./public')))
+app.use(express.static(path.resolve("./public")));
 
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
 
 app.get("/", async (req, res) => {
-  const allBlogs = await Blog.find({})
+  const allBlogs = await Blog.find({});
   res.render("home", {
     user: req.user,
     blogs: allBlogs,
@@ -39,7 +39,6 @@ app.get("/", async (req, res) => {
 
 app.use("/user", userRoute);
 app.use("/blog", blogRoute);
-
 
 app.listen(PORT, () =>
   console.log(`Server Started at http://localhost:${PORT}`)
