@@ -1,6 +1,6 @@
 const { createHmac, randomBytes } = require("crypto");
 const { Schema, model } = require("mongoose");
-const { createTokenForUser } = require("../services/authentication")
+const { createTokenForUser } = require("../services/authentication");
 
 const userSchema = new Schema(
   {
@@ -23,7 +23,7 @@ const userSchema = new Schema(
     },
     prifileImageURL: {
       type: String,
-      default: "./images/default",
+      default: "/images/default.png",
     },
     role: {
       type: String,
